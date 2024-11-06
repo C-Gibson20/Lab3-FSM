@@ -1,10 +1,10 @@
 module delay #(
-    parameter WIDTH = 10    // no of bits in delay counter
+    parameter WIDTH = 7    // no of bits in delay counter
 )(
     input   logic               clk,        // clock signal
     input   logic               rst,        // reset signal
     input   logic               trigger,    // trigger input signal
-    input   logic [WIDTH-1:0]   n,          // no of clock cycle delay
+    input   logic [WIDTH-1:0]   K,          // no of clock cycle delay
     output  logic               time_out    // output pulse signal
 );
     // Declare counter
@@ -16,7 +16,7 @@ module delay #(
 
     // counter
     always_ff @(posedge clk)
-        if (rst | trigger | count=={WIDTH{1'b0}}) count <= n - 1'b1;
+        if (rst | trigger | count=={WIDTH{1'b0}}) count <= K - 1'b1;
         else                                count <= count - 1'b1;
 
     // state transition
