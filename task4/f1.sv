@@ -4,13 +4,13 @@ module f1 (
     input logic clk,
     input logic [15:0] N,
     input logic trigger,
-    input logic cmd_seq,
-    input logic cmd_delay,
     input logic [7:0] react_time,
     output logic [7:0] fsm_out,
     output logic [11:0] bcd
 );
 
+logic cmd_seq;
+logic cmd_delay;
 logic tick;
 logic delay;
 logic mux_out;
@@ -49,6 +49,8 @@ f1_fsm myF1_fsm (
   .en (mux_out),
   .trigger(trigger),
   .clk(clk),
+  .cmd_seq(cmd_seq),
+  .cmd_delay(cmd_seq),
   .fsm_out (fsm_out)
 );
 

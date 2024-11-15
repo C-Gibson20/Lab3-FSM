@@ -8,7 +8,8 @@
 int main(int argc, char **argv, char **env)
 {
     int simcyc;     
-    int tick;  
+    int tick;
+    int last_state;  
 
     Verilated::commandArgs(argc, argv);
     
@@ -27,8 +28,6 @@ int main(int argc, char **argv, char **env)
     top->clk = 1;
     top->rst = 0;
     top->N = vbdValue();
-    top->cmd_seq = 0;
-    top->cmd_delay = 0;
     top->trigger = 0;
     
     for (simcyc = 0; simcyc < MAX_SIM_CYC; simcyc++)
@@ -43,17 +42,19 @@ int main(int argc, char **argv, char **env)
         top->N = vbdValue();
         top->rst = (simcyc < 2);
         
-        top->cmd_seq = (top->fsm_out);
         vbdBar(top->fsm_out & 0xFF);
         
-        if (top->fsm_out == 0xFF) { 
-            top->cmd_delay = 1;  
+        if (top->fsm_out == 0xFF) {
+            last_state = 1;
+        }
+        else{
+            last_state = 0;
+        }
+
+        if ((top->fsm_out == 0) && (last_state)) { 
             vbdInitWatch(); 
-        } else {
-            top->cmd_delay = 0;
         }
               
-
         if (vbdFlag()){
             top->trigger = 1;
             top->react_time = vbdElapsed();
